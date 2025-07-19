@@ -31,9 +31,9 @@ module.exports.run = async function({ api, event }) {
 	if (event.logMessageData.addedParticipants.some(i => i.userFbId == api.getCurrentUserID())) {
 		api.changeNickname(`{ ${global.config.PREFIX} } × ${(!global.config.BOTNAME) ? "bot" : global.config.BOTNAME}`, threadID, api.getCurrentUserID());
 		const fs = require("fs");
-		return api.sendMessage("𝐇𝐄𝐋𝐋𝐎 𝐄𝐕𝐄𝐑𝐘𝐎𝐍𝐄🙋‍♂️", event.threadID, () => api.sendMessage({body:`🌺⃝𝐌𝐀𝐑⃟𝐈𝐍𝐀  𝐁𝐎𝐓🦋🌺 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃«
+		return api.sendMessage("𝐇𝐄𝐋𝐋𝐎 𝐄𝐕𝐄𝐑𝐘𝐎𝐍𝐄🙋‍♂️", event.threadID, () => api.sendMessage({body:`🌺⃝𝐀𝐇𝐀𝐃  𝐁𝐎𝐓🦋🌺 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃«
 
-𝐁𝐨𝐭 𝐌𝐚𝐝𝐞 𝐛𝐲𝐞 ཫ༄𒁍⃝𝐌𝐀𝐑⃟𝐈𝐍𝐀 ☘️
+𝐁𝐨𝐭 𝐌𝐚𝐝𝐞 𝐛𝐲𝐞 ཫ༄𝐌𝐔𝐆𝐋𝐀𝐘 𝐀𝐙𝐀𝐌 ☘️
 <------------------------------>  
 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 𝐒𝐔𝐂𝐂𝐄𝐒𝐒𝐅𝐔𝐋!!! 
 
@@ -45,19 +45,19 @@ module.exports.run = async function({ api, event }) {
 <<<<<------------------------------>>>>>
 AND FOR ANY REPORT OR CONTACT BOT DEVELOPER
 
-𝐎𝐖𝐍𝐄𝐑: ཫ༄𒁍⃝𝐌𝐀𝐑⃟𝐈𝐍𝐀
+𝐎𝐖𝐍𝐄𝐑: ཫ༄𝐀𝐇𝐀𝐃 𝐌𝐔𝐆𝐇𝐀𝐋
 
 ♻️Facebook: 
 
-https://www.facebook.com/
+https://www.facebook.com/share/16as5iQNba/
 
-Youtube Site : https://youtube.com/
+Youtube Site : https://youtube.com/@ahadmughal-z3j7u
 
 ☢️Telegram: N/A
 
 ☣️Email: 
 
-⚠️Wp: +923243375326`, attachment: fs.createReadStream(__dirname + "/cache/join.jpg")} ,threadID));
+⚠️Tiktok: Ahad_Palestine`, attachment: fs.createReadStream(__dirname + "/cache/join.jpg")} ,threadID));
 	}
 	else {
 		try {
@@ -78,7 +78,7 @@ Youtube Site : https://youtube.com/
 			}
 			memLength.sort((a, b) => a - b);
 			
-			(typeof threadData.customJoin == "undefined") ? msg = "╔════•|      ✿      |•════╗\n 🌿𝗛𝗲𝗹𝗹𝗼 🌿𝗕𝗮𝗯𝘆🌿 \n╚════•|      ✿      |•════╝\n\n    ✨🆆🅴🅻🅻 🅲🅾🅼🅴✨\n\n                 ❥𝐍𝐄𝐖~\n\n        ~🇲‌🇪‌🇲‌🇧‌🇪‌🇷‌~\n\n             [   {name} ]\n\n༄ 𝗠𝘆 𝗚𝗿𝗼𝘂𝗽✺࿐\n\n{threadName}\n\n 🥰🖤🌸𝗛𝗮𝗽𝗽𝘆🍀𝗘𝗻𝗷𝗼𝘆🍀—🌸🥀\n\n         🥀𝗠𝗮𝗷𝗲 𝗞𝗮𝗿𝗼🥀\n\n༄✺𝗢𝗿 𝗧𝘂𝗺 𝗜𝘀 𝗚𝗿𝗼𝘂𝗽 𝗞𝗲 {soThanhVien} 𝗠𝗲𝗺𝗯𝗲𝗿 𝗛𝗼 𝗘𝗻𝗷𝗼𝘆 𝗞𝗮𝗿𝗼 𝗠𝗮𝗷𝗲 𝗟𝗼 [ # ]࿐\n\n    ╔╦══•    •✠•❀•✠ •   •══╦╗\n     ♥  𝐁𝐎𝐓'𝐬 𝐎𝐖𝐍𝐄𝐑♥\n\n                           ☟                     \n\n      ❤️⃝𝐌𝐀𝐑⃟𝐈𝐍𝐀❤️\n     ╚╩══•    •✠•❀•✠ •    •══╩╝" : msg = threadData.customJoin;
+			(typeof threadData.customJoin == "undefined") ? msg = "╔════•|      ✿      |•════╗\n 🌿𝗛𝗲𝗹𝗹𝗼 🌿𝗕𝗮𝗯𝘆🌿 \n╚════•|      ✿      |•════╝\n\n    ✨🆆🅴🅻🅻 🅲🅾🅼🅴✨\n\n                 ❥𝐍𝐄𝐖~\n\n        ~🇲‌🇪‌🇲‌🇧‌🇪‌🇷‌~\n\n             [   {name} ]\n\n༄ 𝗠𝘆 𝗚𝗿𝗼𝘂𝗽✺࿐\n\n{threadName}\n\n 🥰🖤🌸𝗛𝗮𝗽𝗽𝘆🍀𝗘𝗻𝗷𝗼𝘆🍀—🌸🥀\n\n         🥀𝗠𝗮𝗷𝗲 𝗞𝗮𝗿𝗼🥀\n\n༄✺𝗢𝗿 𝗧𝘂𝗺 𝗜𝘀 𝗚𝗿𝗼𝘂𝗽 𝗞𝗲 {soThanhVien} 𝗠𝗲𝗺𝗯𝗲𝗿 𝗛𝗼 𝗘𝗻𝗷𝗼𝘆 𝗞𝗮𝗿𝗼 𝗠𝗮𝗷𝗲 𝗟𝗼 [ # ]࿐\n\n    ╔╦══•    •✠•❀•✠ •   •══╦╗\n     ♥  𝐁𝐎𝐓'𝐬 𝐎𝐖𝐍𝐄𝐑♥\n\n                           ☟                     \n\n      ❤️⃝🅰🅷🅰🅳❤️\n     ╚╩══•    •✠•❀•✠ •    •══╩╝" : msg = threadData.customJoin;
 			msg = msg
 			.replace(/\{name}/g, nameArray.join(', '))
 			.replace(/\{type}/g, (memLength.length > 1) ?  'You' : 'Friend')
