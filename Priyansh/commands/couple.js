@@ -1,105 +1,80 @@
-const axios = require("axios");
-const fs = require("fs-extra");
-const Canvas = require("canvas");
-const path = require("path");
-
 module.exports.config = {
-  name: "couple",
-  version: "3.1.0",
-  hasPermssion: 0,
-  credits: "Ahad Mughal",
-  description: "Couple pairing with frame and DPs",
-  commandCategory: "roleplay",
-  usages: "couple",
-  cooldowns: 3,
-};
-
-module.exports.run = async function ({ api, event, Users }) {
-  try {
-    const senderID = event.senderID;
-    const participants = event.participantIDs.filter(id => id !== senderID);
-    const partnerID = participants[Math.floor(Math.random() * participants.length)];
-
-    const senderName = (await Users.getData(senderID)).name;
-    const partnerName = (await Users.getData(partnerID)).name;
-
-    const lovePercent = Math.floor(Math.random() * 101);
-    const heartEmoji = lovePercent > 75 ? "💖" : lovePercent > 50 ? "💘" : lovePercent > 30 ? "💕" : "💔";
-
-    const avatarURL1 = `https://graph.facebook.com/${senderID}/picture?width=512&height=512`;
-    const avatarURL2 = `https://graph.facebook.com/${partnerID}/picture?width=512&height=512`;
-
-    const [avatar1Buffer, avatar2Buffer] = await Promise.all([
-      axios.get(avatarURL1, { responseType: "arraybuffer" }).then(res => res.data),
-      axios.get(avatarURL2, { responseType: "arraybuffer" }).then(res => res.data)
-    ]);
-
-    const img1 = await Canvas.loadImage(avatar1Buffer);
-    const img2 = await Canvas.loadImage(avatar2Buffer);
-    const frame = await Canvas.loadImage(path.join(__dirname, "frame.png"));
-
-    const width = 700, height = 500;
-    const canvas = Canvas.createCanvas(width, height);
-    const ctx = canvas.getContext("2d");
-
-    // Gradient background
-    const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, "#ffe6f0");
-    gradient.addColorStop(1, "#ccf2ff");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
-
-    // Draw circular avatars
-    function drawCircularImage(ctx, img, x, y, size) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2, true);
-      ctx.closePath();
-      ctx.clip();
-      ctx.drawImage(img, x, y, size, size);
-      ctx.restore();
+    name: "couple",
+    version: "2.0.0",
+    hasPermssion: 0,
+    credits: "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭",
+    description: "Seo phi",
+    commandCategory: "Love",
+    usages: "[tag]",
+    cooldowns: 5,
+    dependencies: {
+        "axios": "",
+        "fs-extra": "",
+        "path": "",
+        "jimp": ""
     }
-
-    drawCircularImage(ctx, img1, 100, 100, 200);
-    drawCircularImage(ctx, img2, 400, 100, 200);
-
-    // Frame on top
-    ctx.drawImage(frame, 0, 0, width, height);
-
-    // Names
-    ctx.font = "28px Arial";
-    ctx.fillStyle = "#000";
-    ctx.fillText(senderName, 130, 330);
-    ctx.fillText(partnerName, 430, 330);
-
-    // Ensure cache folder exists
-    const cachePath = path.join(__dirname, "cache");
-    fs.ensureDirSync(cachePath);
-    const imagePath = path.join(cachePath, `couple_${senderID}.png`);
-
-    // Save image
-    const out = fs.createWriteStream(imagePath);
-    const stream = canvas.createPNGStream();
-    stream.pipe(out);
-
-    out.on("finish", () => {
-      api.sendMessage({
-        body: 
-`💑 𝗖𝗢𝗨𝗣𝗟𝗘 𝗣𝗔𝗜𝗥𝗘𝗗 ${heartEmoji}
-${senderName} 💓 ${partnerName}
-Love Percent: ${lovePercent}%
-
-👑 Created by: 『𝐀𝐡𝐚𝐝 𝐌𝐮𝐠𝐡𝐚𝐥』💎`,
-        mentions: [
-          { id: senderID, tag: senderName },
-          { id: partnerID, tag: partnerName }
-        ],
-        attachment: fs.createReadStream(imagePath)
-      }, event.threadID, () => fs.unlinkSync(imagePath));
-    });
-
-  } catch (err) {
-    console.error("Error in couple module:", err);
-    api.sendMessage("❌ Error: RANDAVA MARO TUM 😂🥱. Please check logs or image assets.", event.threadID);
-  }
 };
+
+module.exports.onLoad = async() => {
+    const { resolve } = global.nodemodule["path"];
+    const { existsSync, mkdirSync } = global.nodemodule["fs-extra"];
+    const { downloadFile } = global.utils;
+    const dirMaterial = __dirname + `/cache/canvas/`;
+    const path = resolve(__dirname, 'cache/canvas', 'seophi.png');
+    if (!existsSync(dirMaterial + "canvas")) mkdirSync(dirMaterial, { recursive: true });
+    if (!existsSync(path)) await downloadFile("https://i.imgur.com/hmKmmam.jpg", path);
+}
+
+async function makeImage({ one, two }) {
+    const fs = global.nodemodule["fs-extra"];
+    const path = global.nodemodule["path"];
+    const axios = global.nodemodule["axios"]; 
+    const jimp = global.nodemodule["jimp"];
+    const __root = path.resolve(__dirname, "cache", "canvas");
+
+    let batgiam_img = await jimp.read(__root + "/seophi.png");
+    let pathImg = __root + `/batman${one}_${two}.png`;
+    let avatarOne = __root + `/avt_${one}.png`;
+    let avatarTwo = __root + `/avt_${two}.png`;
+    
+    let getAvatarOne = (await axios.get(`https://graph.facebook.com/${one}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: 'arraybuffer' })).data;
+    fs.writeFileSync(avatarOne, Buffer.from(getAvatarOne, 'utf-8'));
+    
+    let getAvatarTwo = (await axios.get(`https://graph.facebook.com/${two}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: 'arraybuffer' })).data;
+    fs.writeFileSync(avatarTwo, Buffer.from(getAvatarTwo, 'utf-8'));
+    
+    let circleOne = await jimp.read(await circle(avatarOne));
+    let circleTwo = await jimp.read(await circle(avatarTwo));
+    batgiam_img.resize(1024, 712).composite(circleOne.resize(200, 200), 527, 141).composite(circleTwo.resize(200, 200), 389, 407);
+    
+    let raw = await batgiam_img.getBufferAsync("image/png");
+    
+    fs.writeFileSync(pathImg, raw);
+    fs.unlinkSync(avatarOne);
+    fs.unlinkSync(avatarTwo);
+    
+    return pathImg;
+}
+async function circle(image) {
+    const jimp = require("jimp");
+    image = await jimp.read(image);
+    image.circle();
+    return await image.getBufferAsync("image/png");
+}
+
+module.exports.run = async function ({ event, api, args }) {
+    const fs = global.nodemodule["fs-extra"];
+    const { threadID, messageID, senderID } = event;
+    var mention = Object.keys(event.mentions)[0]
+    let tag = event.mentions[mention].replace("@", "");
+    if (!mention) return api.sendMessage("Vui lòng tag 1 người", threadID, messageID);
+    else {
+        var one = senderID, two = mention;
+        return makeImage({ one, two }).then(path => api.sendMessage({ body: "Ship ",
+            mentions: [{
+          tag: tag,
+          id: mention
+        }],
+     attachment: fs.createReadStream(path) }, threadID, () => fs.unlinkSync(path), messageID));
+    }
+  }
