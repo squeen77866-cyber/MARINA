@@ -5,7 +5,7 @@ const path = require("path");
 
 module.exports.config = {
   name: "couple",
-  version: "3.0.0",
+  version: "3.1.0",
   hasPermssion: 0,
   credits: "Ahad Mughal",
   description: "Couple pairing with frame and DPs",
@@ -36,30 +36,48 @@ module.exports.run = async function ({ api, event, Users }) {
 
     const img1 = await Canvas.loadImage(avatar1Buffer);
     const img2 = await Canvas.loadImage(avatar2Buffer);
-    const frame = await Canvas.loadImage(path.join(__dirname, "frame.png")); // You must place your frame.png in same folder
+    const frame = await Canvas.loadImage(path.join(__dirname, "frame.png"));
 
-    const canvas = Canvas.createCanvas(700, 500);
+    const width = 700, height = 500;
+    const canvas = Canvas.createCanvas(width, height);
     const ctx = canvas.getContext("2d");
 
-    // Background
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Gradient background
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, "#ffe6f0");
+    gradient.addColorStop(1, "#ccf2ff");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, width, height);
 
-    // Draw DPs side by side
-    ctx.drawImage(img1, 50, 100, 250, 250);
-    ctx.drawImage(img2, 400, 100, 250, 250);
+    // Draw circular avatars
+    function drawCircularImage(ctx, img, x, y, size) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(img, x, y, size, size);
+      ctx.restore();
+    }
 
-    // Frame over
-    ctx.drawImage(frame, 0, 0, 700, 500);
+    drawCircularImage(ctx, img1, 100, 100, 200);
+    drawCircularImage(ctx, img2, 400, 100, 200);
 
-    // Write names
+    // Frame on top
+    ctx.drawImage(frame, 0, 0, width, height);
+
+    // Names
     ctx.font = "28px Arial";
     ctx.fillStyle = "#000";
-    ctx.fillText(senderName, 110, 380);
-    ctx.fillText(partnerName, 460, 380);
+    ctx.fillText(senderName, 130, 330);
+    ctx.fillText(partnerName, 430, 330);
 
-    // Save final image
-    const imagePath = path.join(__dirname, "cache", `couple_${senderID}.png`);
+    // Ensure cache folder exists
+    const cachePath = path.join(__dirname, "cache");
+    fs.ensureDirSync(cachePath);
+    const imagePath = path.join(cachePath, `couple_${senderID}.png`);
+
+    // Save image
     const out = fs.createWriteStream(imagePath);
     const stream = canvas.createPNGStream();
     stream.pipe(out);
@@ -81,7 +99,7 @@ Love Percent: ${lovePercent}%
     });
 
   } catch (err) {
-    console.error(err);
-    api.sendMessage("❌ Error: Could not generate couple image.", event.threadID);
+    console.error("Error in couple module:", err);
+    api.sendMessage("❌ Error: RANDAVA MARO TUM 😂🥱. Please check logs or image assets.", event.threadID);
   }
 };
