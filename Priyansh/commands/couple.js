@@ -1,90 +1,42 @@
-const axios = require("axios");
-const fs = require("fs-extra");
-const Canvas = require("canvas");
-
 module.exports.config = {
   name: "couple",
-  version: "1.0.0",
+  version: "2.0.1",
   hasPermssion: 0,
   credits: "Ahad Mughal",
-  description: "Random VIP love pairing",
+  description: "Instant couple pairing with names and emojis",
   commandCategory: "roleplay",
   usages: "couple",
-  cooldowns: 0
+  cooldowns: 3,
+  dependencies: {}
 };
 
-module.exports.run = async function ({ api, event, Users }) {
-  const senderID = event.senderID;
-  const threadID = event.threadID;
-  const messageID = event.messageID;
+module.exports.run = async function({ api, event, Users }) {
+  const members = event.participantIDs.filter(id => id !== event.senderID);
+  const partnerID = members[Math.floor(Math.random() * members.length)];
 
-  // Random love percentage
-  const tile = Math.floor(Math.random() * 101);
+  const senderName = (await Users.getData(event.senderID)).name;
+  const partnerName = (await Users.getData(partnerID)).name;
 
-  // Random user from group
-  const participants = event.participantIDs;
-  const id = participants[Math.floor(Math.random() * participants.length)];
+  const lovePercent = Math.floor(Math.random() * 101);
+  const heartEmoji = lovePercent > 75 ? "💖" : lovePercent > 50 ? "💘" : lovePercent > 30 ? "💕" : "💔";
 
-  if (id === senderID) return api.sendMessage("💔 Cannot pair with yourself!", threadID, messageID);
+  const mentionArray = [
+    { id: event.senderID, tag: senderName },
+    { id: partnerID, tag: partnerName }
+  ];
 
-  const name1 = (await Users.getData(senderID)).name;
-  const name2 = (await Users.getData(id)).name;
+  const message = 
+`━━━━━━━━━━━━━━━━━━━
+💑 𝑪𝑶𝑼𝑷𝑳𝑬 𝑷𝑨𝑰𝑹𝑬𝑫 💞
 
-  const avatar1 = await axios.get(`https://graph.facebook.com/${senderID}/picture?height=720&width=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: "arraybuffer" });
-  const avatar2 = await axios.get(`https://graph.facebook.com/${id}/picture?height=720&width=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: "arraybuffer" });
+🥰 𝗖𝗼𝘂𝗽𝗹𝗲:
+➤ ${senderName} ${heartEmoji} ${partnerName}
 
-  fs.writeFileSync(__dirname + "/cache/avt1.png", Buffer.from(avatar1.data, "utf-8"));
-  fs.writeFileSync(__dirname + "/cache/avt2.png", Buffer.from(avatar2.data, "utf-8"));
+💘 𝗟𝗼𝘃𝗲 𝗣𝗲𝗿𝗰𝗲𝗻𝘁:
+➤ ${lovePercent}%
 
-  const img1 = await Canvas.loadImage(__dirname + "/cache/avt1.png");
-  const img2 = await Canvas.loadImage(__dirname + "/cache/avt2.png");
+🛠️ 𝑪𝒓𝒆𝒂𝒕𝒆𝒅 𝒃𝒚: 『𝐀𝐡𝐚𝐝 𝐌𝐮𝐠𝐡𝐚𝐥』💎
+━━━━━━━━━━━━━━━━━━━`;
 
-  // Optional: Use a VIP heart frame PNG
-  const framePath = __dirname + "/cache/vipframe.png";
-  const frame = await Canvas.loadImage(framePath);
-
-  const canvas = Canvas.createCanvas(800, 400);
-  const ctx = canvas.getContext("2d");
-
-  // Background
-  ctx.fillStyle = "#ffccdd";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Draw avatars in circles
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(200, 200, 150, 0, Math.PI * 2);
-  ctx.closePath();
-  ctx.clip();
-  ctx.drawImage(img1, 50, 50, 300, 300);
-  ctx.restore();
-
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(600, 200, 150, 0, Math.PI * 2);
-  ctx.closePath();
-  ctx.clip();
-  ctx.drawImage(img2, 450, 50, 300, 300);
-  ctx.restore();
-
-  // Draw frame over the avatars
-  ctx.drawImage(frame, 0, 0, 800, 400);
-
-  const buffer = canvas.toBuffer();
-  fs.writeFileSync(__dirname + "/cache/vipcouple.png", buffer);
-
-  const msg = {
-    body: `💞 [ 𝗟𝗢𝗩𝗘 𝗣𝗔𝗜𝗥 𝗔𝗟𝗘𝗥𝗧 ] 💞\n\n💘 𝗥𝗼𝗠𝗮𝗡𝗖𝗲 𝗥𝗮𝗧𝗶𝗢: ${tile}%\n${name1} 💓 ${name2}\n\n👑 𝗖𝗿𝗲𝗮𝘁𝗲𝗱 𝗕𝘆: 𝘼𝙝𝙖𝙙 𝙈𝙪𝙜𝙝𝙖𝙡 𝙑𝙄𝙋 💎`,
-    mentions: [
-      { id: senderID, tag: name1 },
-      { id: id, tag: name2 }
-    ],
-    attachment: fs.createReadStream(__dirname + "/cache/vipcouple.png")
-  };
-
-  return api.sendMessage(msg, threadID, () => {
-    fs.unlinkSync(__dirname + "/cache/avt1.png");
-    fs.unlinkSync(__dirname + "/cache/avt2.png");
-    fs.unlinkSync(__dirname + "/cache/vipcouple.png");
-  }, messageID);
+  return api.sendMessage({ body: message, mentions: mentionArray }, event.threadID, event.messageID);
 };
